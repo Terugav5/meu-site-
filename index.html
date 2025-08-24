@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SpotiTube - Sua Música no YouTube</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">🎵 SpotiTube</div>
+      <nav>
+        <ul>
+          <li>🏠 Início</li>
+          <li>🎧 Sua Biblioteca</li>
+          <li>❤️  Músicas Curtidas</li>
+        </ul>
+      </nav>
+      
+      <!-- Playlist Section -->
+      <div class="playlist-section">
+        <div class="playlist-header">
+          <h3 onclick="togglePlaylistSection()">
+            📋 Minha Playlist 
+            <span class="toggle-icon">▼</span>
+          </h3>
+          <div class="playlist-controls">
+            <button onclick="playEntirePlaylist()" title="Tocar Playlist" class="play-all-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+              </svg>
+            </button>
+            <button onclick="clearPlaylist()" title="Limpar Playlist" class="clear-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="playlist-content" id="user-playlist">
+          <p class="empty-playlist">Sua playlist está vazia. Adicione músicas!</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Mobile Header -->
+      <div class="mobile-header">
+        <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+        <div class="mobile-logo">🎵 SpotiTube</div>
+      </div>
+
+      <header class="search-bar">
+        <input type="text" id="searchInput" placeholder="🔍 Buscar música ou artista..." />
+        <button onclick="searchMusic()">Buscar</button>
+      </header>
+
+      <section class="results" id="results">
+        <p>Busque por músicas para começar.</p>
+      </section>
+
+      <!-- Player com fundo de capa -->
+      <div class="player-section">
+        <!-- Container invisível para o player do YouTube -->
+        <div id="youtube-player" style="display: none;"></div>
+
+        <p id="now-playing">Nenhuma música tocando</p>
+
+        <div class="controls">
+          <button id="prevBtn" onclick="prevMusic()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M4 4a.5.5 0 0 1 1 0v3.248l6.267-3.636c.52-.302 1.233.043 1.233.696v7.384c0 .653-.713.998-1.233.696L5 8.752V12a.5.5 0 0 1-1 0V4zm3.44 1.955a.75.75 0 0 0 0 1.09l4.082 2.357a.75.75 0 0 0 0-1.09L7.44 4.955z"/>
+            </svg>
+          </button>
+
+          <button id="playPauseBtn" onclick="togglePlayPause()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16" id="playIcon">
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+              <path d="M6.271 5.055a.5.5 0 0 1 .52 .038L10.5 8a.5.5 0 0 1 0 .808l-3.71 2.912a.5.5 0 0 1-.808-.387V5.113a.5.5 0 0 1 .52-.445z"/>
+            </svg>
+          </button>
+
+          <button id="nextBtn" onclick="nextMusic()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M12 12a.5.5 0 0 0 1 0V8.752l3.266 1.897c.52.302 1.233-.043 1.233-.696v-7.384c0-.653-.713-.998-1.233-.696L13 7.248V4a.5.5 0 0 0-1 0v8zm-6.729-1.955a.75.75 0 0 1 0-1.09L9.037 6.6a.75.75 0 0 1 .808.387v5.226a.75.75 0 0 1-.808.387L5.27 10.245a.75.75 0 0 1 0-1.09z"/>
+            </svg>
+          </button>
+
+          <button id="loopBtn" onclick="toggleLoop()" title="Repetir">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M11 5.466V4H5a4 4 0 0 0-3.584 5.777.5.5 0 1 1-.896.446A5 5 0 0 1 5 3h6V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192Zm3.81.086a.5.5 0 0 1 .67.225A5 5 0 0 1 11 13H5v1.466a.25.25 0 0 1-.41.192l-2.36-1.966a.25.25 0 0 1 0-.384l2.36-1.966a.25.25 0 0 1 .41.192V12h6a4 4 0 0 0 3.585-5.777.5.5 0 0 1 .225-.67Z"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Letra da música -->
+        <div class="lyrics-section">
+          <h3>📝 Letra da Música</h3>
+          <div id="lyrics">A letra aparecerá aqui...</div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Login Modal -->
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>🎵 SpotiTube Login</h2>
+        <span class="close" onclick="closeLoginModal()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="login-form">
+          <input type="text" id="loginUsername" placeholder="Nome de usuário" />
+          <input type="password" id="loginPassword" placeholder="Senha" />
+          <button onclick="login()" class="login-btn">Entrar</button>
+          <p>Não tem conta? <span onclick="showRegister()" class="link">Cadastre-se</span></p>
+        </div>
+        <div class="register-form" style="display: none;">
+          <input type="text" id="registerUsername" placeholder="Nome de usuário" />
+          <input type="password" id="registerPassword" placeholder="Senha" />
+          <input type="password" id="confirmPassword" placeholder="Confirmar senha" />
+          <button onclick="register()" class="login-btn">Cadastrar</button>
+          <p>Já tem conta? <span onclick="showLogin()" class="link">Faça login</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Info -->
+  <div id="userInfo" class="user-info" style="display: none;">
+    <div class="user-avatar">👤</div>
+    <span id="userName">Usuário</span>
+    <button onclick="logout()" class="logout-btn">Sair</button>
+  </div>
+
+  <!-- O player do YouTube será inicializado via JavaScript -->
+
+  <script src="script.js"></script>
+</body>
+</html>
